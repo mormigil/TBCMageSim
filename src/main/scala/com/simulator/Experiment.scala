@@ -1,39 +1,37 @@
-package com.simulator
+// package com.simulator
 
-object Experiment {
-    
+// object Experiment {
 
-    def main(args: Array[String]) {
-        implicit val initialMageStats = MageStats(815, 4.91, 19.68, 0, 458, 192, 262)
+//   def main(args: Array[String]) {
+//     implicit val initialMageStats = MageStats(1285, 4.60, 25.22, 19.4, 517, 258, 50)
 
-        implicit val cooldowns = Cooldowns()
+//     implicit val cooldowns = Cooldowns()
 
-        val finalMageStats = Parameters.getFinalStats(initialMageStats)
+//     val finalMageStats = Parameters.getFinalStats(initialMageStats)
 
-        println(finalMageStats)
+//     println(finalMageStats)
 
-        val mana = Mana(finalMageStats)
+//     val mana = Mana(finalMageStats)
 
-        val fightLength = 107
+//     val fightLength = 60
 
-        println(mana.totalMana(fightLength))
+//     println(mana.totalMana(fightLength))
 
-        val rotations = new Rotations(finalMageStats)
+//     val rotations = new Rotations(finalMageStats)
 
-        // println(rotations.frostboltDrop)
+//     // println(rotations.frostboltDrop)
 
-        val allRotations = rotations.generateRotations()
+//     val allRotations = rotations.generateRotations()
 
-        // allRotations.foreach(r => println(r))
+//     // allRotations.foreach(r => println(r))
 
-        // println(rotations.apRotation(1))
+//     // println(rotations.apRotation(1))
 
-        // println(rotations.apRotation(2))
+//     // println(rotations.apRotation(2))
 
+//     println("________________________")
+//     println(FullRotationbuilder.fullRotation(rotations, mana, fightLength, rotations.generateRotations()))
+//     println("________________________")
 
-        println("________________________")
-        println(FullRotationbuilder.fullRotation(rotations, mana.totalMana(fightLength), fightLength, rotations.generateRotations()))
-        println("________________________")
-
-    }
-}
+//   }
+// }
