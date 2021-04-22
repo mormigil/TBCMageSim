@@ -9,6 +9,9 @@ case class Rotation(damage: Int, mana: Int, length: Double, spells: List[Spell])
 
   def getMps() = mana.toDouble / length
 
+  def getNumABs() = spells.count{case  ArcaneBlast(_, _) => true
+    case _ => false}
+
   def +(otherRotation: Rotation): Rotation = Rotation(damage + otherRotation.damage, mana + otherRotation.mana, length + otherRotation.length, spells ++ otherRotation.spells)
 
   override def toString() = f"This rotation has ${getDps()}%1.2f dps and consumes ${getMps()}%1.2f mps over $length%1.2f time:: Rotation: ${spells} "
@@ -30,8 +33,14 @@ class Rotations(mageStats: MageStats, statBuffs: StatBuffs = StatBuffs(), manaBu
 
   val amFbDrop = Rotation(amDmg + frostboltDmg, amMana + frostboltMana, ArcaneMissiles.castTime + Frostbolt.castTime, List(ArcaneMissiles, Frostbolt))
 
-  val abDmg = (ArcaneBlast(0, 0).dmg(mageStats.spellPower + mageStats.arcaneSpellPower, mageStats.critChance, mageStats.hitChance) * dmgMultiplier * 1.2).toInt
+  val abDmg = (ArcaneBlast(0, 0).dmg(mageStats.spellPower + mageStats.arcaneSpellPower, mageStats.critChance, mageStats.hitChance) * dmgMultiplier).toInt
   // val baseABMana = ArcaneBlast(0, 3).cost + ArcaneBlast()
+
+  val setupAB = List(ArcaneBlast(0, 3), ArcaneBlast(1, 1), ArcaneBlast(2, 2))
+
+  val abSetupRotation = Rotation(abDmg*3, setupAB.map(_.cost).sum, setupAB.map(_.castTime).sum, setupAB)
+
+  val baseRotation: Rotation = abSetupRotation + frostboltDrop
 
   def generateRotations(): List[Rotation] = {
     var lb = ListBuffer.empty[Rotation]
@@ -47,7 +56,7 @@ class Rotations(mageStats: MageStats, statBuffs: StatBuffs = StatBuffs(), manaBu
   }
 
   def apRotation(numAP: Int): Rotation = {
-    val apABDmg = (ArcaneBlast(0, 0).dmg(mageStats.spellPower + 225 + 155 + mageStats.arcaneSpellPower, mageStats.critChance, mageStats.hitChance) * 1.2 * dmgMultiplier).toInt
+    val apABDmg = (ArcaneBlast(0, 0).dmg(mageStats.spellPower + 155 + mageStats.arcaneSpellPower, mageStats.critChance, mageStats.hitChance) * dmgMultiplier).toInt
 
     val hastePercentWithCds = if (cooldowns.bloodlust.toInt >= numAP) 50 else if (cooldowns.drums >= numAP) mageStats.haste + 5.07 + 20 else mageStats.haste + 20
     val haste = hastePercentWithCds / 100d
@@ -66,6 +75,10 @@ class Rotations(mageStats: MageStats, statBuffs: StatBuffs = StatBuffs(), manaBu
     println(allABs + fbRotation)
 
     allABs + fbRotation
+  }
+
+  def allThreeStackRotation(numArcaneBlasts: Int): Rotation = {
+    Rotation(abDmg*numArcaneBlasts, ArcaneBlast(3, 3).cost*numArcaneBlasts, ArcaneBlast(3, 3).castTime*numArcaneBlasts, List.fill(numArcaneBlasts)(ArcaneBlast(3, 3)))
   }
 
   def timeLimitedABRotation(maxLength: Double): Rotation = {

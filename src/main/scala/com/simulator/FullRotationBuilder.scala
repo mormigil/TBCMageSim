@@ -19,27 +19,45 @@ object FullRotationbuilder {
 
     println(remainingMana)
 
-    val maxMPS = remainingMana / hasteIncreasedFightLength
+    val baseManaConsumed = hasteIncreasedFightLength * rotations.baseRotation.getMps
 
-    println(maxMPS)
+    val number33ABsPossible = Math.floor((remainingMana - baseManaConsumed).toDouble/(Spells.ArcaneBlast(3, 3).cost - 1.5*rotations.baseRotation.getMps))
 
-    val maxMPSRotation = stdRotations.filter(r => r.getMps() < maxMPS && r.length < hasteIncreasedFightLength).sortBy(_.getMps()).last
+    val number33ABs = Math.min((hasteIncreasedFightLength / 1.5).toInt, number33ABsPossible)
 
-    val numMaxRotation = ((hasteIncreasedFightLength) / maxMPSRotation.length).toInt
+    val numBaseRotations = Math.floor((hasteIncreasedFightLength - number33ABs * 1.5) / rotations.baseRotation.length).toInt
 
-    println(maxMPSRotation, numMaxRotation)
+    val baseRotations: Rotation = if(numBaseRotations >= 2) List.fill(numBaseRotations)(rotations.baseRotation).reduce(_ + _) else rotations.baseRotation
 
-    val maxMPSFullRotation = if (numMaxRotation >= 2) List.fill(numMaxRotation)(maxMPSRotation).reduce(_ + _) else maxMPSRotation
+    val endingRotation = apRotation + rotations.allThreeStackRotation(number33ABs.toInt) + baseRotations
 
-    val extraTime = hasteIncreasedFightLength - numMaxRotation * maxMPSRotation.length
+    val timeRemaining = hasteIncreasedFightLength - endingRotation.length
 
-    println(extraTime)
+    val bonusSmoothingRotation = Rotation((timeRemaining*rotations.baseRotation.getDps).toInt, (timeRemaining*rotations.baseRotation.getMps).toInt, timeRemaining, List(Spells.ArcaneBlast(5, 5)))
 
-    val extraRotation = stdRotations.filter(_.length < extraTime).sortBy(_.length).lastOption.getOrElse(rotations.timeLimitedABRotation(extraTime))
+    endingRotation + bonusSmoothingRotation
 
-    val resultingRotation = apRotation + maxMPSFullRotation + extraRotation
+    // val maxMPS = remainingMana / hasteIncreasedFightLength
 
-    Rotation(resultingRotation.damage, resultingRotation.mana, fightLength, resultingRotation.spells)
+    // println(maxMPS)
+
+    // val maxMPSRotation = stdRotations.filter(r => r.getMps() < maxMPS && r.length < hasteIncreasedFightLength).sortBy(_.getMps()).last
+
+    // val numMaxRotation = ((hasteIncreasedFightLength) / maxMPSRotation.length).toInt
+
+    // println(maxMPSRotation, numMaxRotation)
+
+    // val maxMPSFullRotation = if (numMaxRotation >= 2) List.fill(numMaxRotation)(maxMPSRotation).reduce(_ + _) else maxMPSRotation
+
+    // val extraTime = hasteIncreasedFightLength - numMaxRotation * maxMPSRotation.length
+
+    // println(extraTime)
+
+    // val extraRotation = stdRotations.filter(_.length < extraTime).sortBy(_.length).lastOption.getOrElse(rotations.timeLimitedABRotation(extraTime))
+
+    // val resultingRotation = apRotation + maxMPSFullRotation + extraRotation
+
+    // Rotation(resultingRotation.damage, resultingRotation.mana, fightLength, resultingRotation.spells)
   }
 
 }

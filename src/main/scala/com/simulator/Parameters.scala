@@ -6,7 +6,7 @@ case class MageStats(spellPower: Int, hitChance: Double, critChance: Double, has
 case class StatBuffs(arcaneIntellect: Boolean = true, divineSpirit: Boolean = true, blessingOfKings: Boolean = true, heroicPresence: Boolean = true,
   wrathOfAirTotem: Boolean = true, impJotC: Boolean = true, misery: Boolean = true, elements: Boolean = true, impScorch: Boolean = true,
   giftOfTheWild: Boolean = true, spellfireBonus: Boolean = true, humanSpirit: Boolean = true, chaoticSkyfire: Boolean = true,
-  gnomishIntellect: Boolean = false, totemOfWrath: Boolean = true, moonkinAura: Boolean = true) {
+  gnomishIntellect: Boolean = false, totemOfWrath: Boolean = false, moonkinAura: Boolean = false) {
   val ai = if (arcaneIntellect) 40 else 0
   val ds = if (divineSpirit) 40 else 0
   val dsi = if (divineSpirit) .1 else 0
@@ -22,7 +22,7 @@ case class StatBuffs(arcaneIntellect: Boolean = true, divineSpirit: Boolean = tr
   val mka = if (moonkinAura) 5 else 0
   val hs = if (humanSpirit) 1.1 else 1
   val gi = if (gnomishIntellect) 1.05 else 1
-  val coe = if (elements) 1.13 else 0
+  val coe = if (elements) 1.1 else 0
   val csm = if (chaoticSkyfire) 1.03 else 0
 
 }
@@ -46,7 +46,7 @@ case class Consumables(spellDmgFood: Boolean = true, brilliantWizardOil: Boolean
   val blf = if (blindingLightFlask) 80 else 0
 }
 
-case class Cooldowns(innervate: Int = 1, manaTideTotem: Boolean = true, bloodlust: Int = 1, drums: Int = 0) // get drums working
+case class Cooldowns(innervate: Int = 1, manaTideTotem: Int = 3, bloodlust: Int = 0, drums: Int = 0) // get drums working
 
 class Talents(spec: String) {
   val isArcaneFrost = if (spec.toUpperCase == "ARCANEFROST") true else false

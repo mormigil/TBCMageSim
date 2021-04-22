@@ -31,6 +31,10 @@ object TutorialApp {
     document.body.appendChild(button)
 
     appendPar(document.body, "Hello World")
+
+    implicit val mageStats = MageStats(855, 5.39, 19.77, 0, 473, 211, 272)
+
+    appendPar(document.body, Experiment.generateResults())
   }
 
 }

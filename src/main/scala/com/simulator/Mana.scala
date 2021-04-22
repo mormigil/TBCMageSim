@@ -20,10 +20,10 @@ case class Mana(mageStats: MageStats, statBuffs: StatBuffs = StatBuffs(), manaBu
 
   val innervate = cooldowns.innervate * (5 - .6) * spiritRegen * 20
 
-  val manaTideTotem = if (cooldowns.manaTideTotem) .24 * maxMana else 0
+  val manaTideTotem = cooldowns.manaTideTotem * .24
 
   def totalMana(fightLength: Int): Int = {
-    (maxMana + fightLength * mps + evocate + innervate + manaTideTotem + math.ceil(fightLength.toDouble / 120d) * (manaGem + manaPotion)).toInt
+    (maxMana + fightLength * totalMPS + evocate + innervate + manaTideTotem + math.ceil(fightLength.toDouble / 120d) * (manaGem + manaPotion)).toInt
   }
 
 }
